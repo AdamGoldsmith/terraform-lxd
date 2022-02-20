@@ -20,7 +20,7 @@ TODO: Tidy up
 1. `terraform apply`
 1. `cd ../../ansible`
 1. `ansible vault -m ping`
-1. Connect directly: `ssh -i ../../ansible/ssh_keys/id_ansible ansible@x.x.x.x` (grab IP from `lxc list` output)
+1. Connect directly: `ssh -i ssh_keys/id_ansible ansible@x.x.x.x` (grab IP from `lxc list` output)
 
 # Known issues
 
