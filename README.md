@@ -6,6 +6,7 @@
 * lxc
 * Ansible
   * community.crypto.openssh_keypair plugin (install with `ansible-galaxy collection install community.crypto`)
+  * community.general.lxd (install with `ansible-galaxy collection install community.general`)
 * Terraform
 
 ## Running the code (TL;DR)
