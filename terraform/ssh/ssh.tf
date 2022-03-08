@@ -43,7 +43,7 @@ resource "lxd_container" "ssh_server" {
   profiles  = ["default", lxd_profile.config.name]
 }
 
-# Create LXD SSH Server containers
+# Create LXD SSH Client containers
 resource "lxd_container" "ssh_client" {
   for_each  = toset(local.ssh_client_names.ssh-client)
   name      = each.key

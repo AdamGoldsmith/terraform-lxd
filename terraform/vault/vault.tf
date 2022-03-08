@@ -13,7 +13,7 @@ data "template_file" "user_data" {
 
 # Create container profile
 resource "lxd_profile" "config" {
-  name = "config"
+  name = "vault_config"
 
   config = {
     "limits.cpu" = 2
