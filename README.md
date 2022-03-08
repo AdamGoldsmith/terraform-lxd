@@ -2,7 +2,7 @@
 
 ## Prerequisites
 
-* lxd
+* lxd >4.0
 * lxc
 * Ansible
   * community.crypto.openssh_keypair plugin (install with `ansible-galaxy collection install community.crypto`)
@@ -24,6 +24,8 @@ TODO: Tidy up
 1. Connect directly: `ssh -i ssh_keys/id_ansible ansible@x.x.x.x` (grab IP from `lxc list` output)
 
 # Known issues
+
+1. Raft storage cluster nodes do not connect on Centos based images
 
 # TODO:
 

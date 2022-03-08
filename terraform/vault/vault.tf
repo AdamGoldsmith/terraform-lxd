@@ -25,9 +25,10 @@ resource "lxd_profile" "config" {
 resource "lxd_container" "vault" {
   for_each  = toset(local.container_names.vault)
   name      = each.key
-  // image     = "ubuntu:18.04"
+  image     = "ubuntu:20.04"
   # Using a cloud-based image will allow cloud-init configuration
-  image     = "images:centos/7/cloud"
+  // image     = "images:centos/7/cloud"
+  // image     = "images:almalinux/8/cloud"
   // I couldn't get cloud-init working when using type of virtual-machine
   // type      = "virtual-machine"
   ephemeral = false
