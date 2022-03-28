@@ -32,3 +32,8 @@ TODO: Tidy up
 1. Tidy up variables & remove unused ones
 1. Consider shifing the CloudInit config directory into each project dir to keep it grouped
 1. Update README :-)
+
+# References
+
+This blog helped me select the correct LXD configuration & LXC container settings:
+https://blog.canutethegreat.com/portable-devops-platform-gitlab-in-an-lxd-container-db2850224caf
