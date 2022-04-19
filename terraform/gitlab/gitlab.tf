@@ -1,6 +1,6 @@
 locals {
   gitlab_names = {
-    for name, count in var.gitlab_counts : name => [
+    for name, count in var.server_counts : name => [
       for i in range(1, count+1) : format("%s-%02d", name, i)
     ]
   }
