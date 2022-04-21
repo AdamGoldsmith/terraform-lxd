@@ -6,9 +6,14 @@ locals {
   }
 }
 
+# Get CloudInit user data info
+data "template_file" "user_data" {
+  template = file("${path.module}/../config/cloud_init.yml")
+}
+
 # Create container profile
-resource "lxd_profile" "runner_config" {
-  name = "gitlab_runner_config"
+resource "lxd_profile" "config" {
+  name = "runner_config"
 
   config = {
     "limits.cpu"          = 2
@@ -24,5 +29,5 @@ resource "lxd_container" "gitlab_runner" {
   # Using a cloud-based image will allow cloud-init configuration (ubuntu images just work)
   image      = "ubuntu:20.04"
   ephemeral  = false
-  profiles   = ["default", lxd_profile.runner_config.name]
+  profiles   = ["default", lxd_profile.config.name]
 }
