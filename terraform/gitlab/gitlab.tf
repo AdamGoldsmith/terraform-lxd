@@ -31,6 +31,7 @@ resource "lxd_storage_pool" "gitlab" {
   }
 }
 
+# Create storage volume
 resource "lxd_volume" "gitlab1" {
   name = "gitlab1"
   pool = "${lxd_storage_pool.gitlab.name}"
