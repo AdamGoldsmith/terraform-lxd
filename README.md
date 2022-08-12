@@ -15,7 +15,7 @@ TODO: Tidy up
 
 1. Clone repo
 1. `cd ansible`
-1. `ansible-playbook playbooks/localhost/localhost.yml`
+1. `ansible-playbook playbooks/site.yml --tags localhost`
 1. `cd ../terraform/gitlab/server`
 1. `terraform init`
 1. `terraform apply --auto-approve`
@@ -26,7 +26,7 @@ TODO: Tidy up
 1. `terraform init`
 1. `terraform apply --auto-approve`
 1. `cd ../../ansible`
-1. Test ansible connectivity: `ansible lxd -m ping`
+1. Test elevated privilege ansible connectivity: `ansible lxd -b -m ping`
 1. Connect directly: `ssh -i ssh_keys/id_ansible ansible@x.x.x.x` (grab IP from `lxc list` output)
 1. `ansible-playbook playbooks/site.yml --skip-tags runner_register`
 1. Navigate to GitLab "runners" page (under "admin") and copy the runner registration token
