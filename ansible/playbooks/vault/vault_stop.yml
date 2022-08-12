@@ -1,0 +1,16 @@
+---
+
+- name: Stop Hashicorp Vault
+  hosts: vault
+  become: yes
+  tags:
+    - never
+    - vault_stop
+
+  tasks:
+
+    - name: Stop vault instances
+      vars:
+        service_name: vault
+      include_role:
+        name: ansible-role-vault-stop

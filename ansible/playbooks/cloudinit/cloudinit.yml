@@ -1,7 +1,0 @@
----
-
-- name: Setup cloudinit configuration
-  hosts: localhost
-  gather_facts: no
-
-- import_playbook: cloudinit_prepare.yml

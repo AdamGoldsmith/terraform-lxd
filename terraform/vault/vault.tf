@@ -1,6 +1,6 @@
 locals {
-  container_names = {
-    for name, count in var.vm_counts : name => [
+  instance_names = {
+    for name, count in var.instance_counts : name => [
       for i in range(1, count+1) : format("%s-%02d", name, i)
     ]
   }
@@ -11,26 +11,49 @@ data "template_file" "user_data" {
   template = file("${path.module}/../config/cloud_init.yml")
 }
 
-# Create container profile
-resource "lxd_profile" "config" {
-  name = "vault_config"
+# Create Gitlab server profile
+resource "lxd_profile" "server_config" {
+  name        = "vault_config"
+  description = "Vault server LXC container"
 
   config = {
-    "limits.cpu" = 2
-    "user.vendor-data" = data.template_file.user_data.rendered
+    "limits.cpu"           = 2
+    "limits.memory"        = "2048MB"
+    "user.vendor-data"     = data.template_file.user_data.rendered
   }
 }
 
-# Create LXD containers
+# Create storage pool
+resource "lxd_storage_pool" "vault" {
+  name   = "vault"
+  driver = "dir"
+  config = {
+    source = "/var/snap/lxd/common/lxd/storage-pools/vault"
+  }
+}
+
+# Create storage volumes
+resource "lxd_volume" "vault" {
+  for_each = toset(local.instance_names.vault)
+  name     = each.key
+  pool     = "${lxd_storage_pool.vault.name}"
+}
+
+# Create vault containers
 resource "lxd_container" "vault" {
-  for_each  = toset(local.container_names.vault)
-  name      = each.key
-  image     = "ubuntu:20.04"
-  # Using a cloud-based image will allow cloud-init configuration
-  // image     = "images:centos/7/cloud"
-  // image     = "images:almalinux/8/cloud"
-  // I couldn't get cloud-init working when using type of virtual-machine
-  // type      = "virtual-machine"
-  ephemeral = false
-  profiles  = ["default", lxd_profile.config.name]
+  for_each   = toset(local.instance_names.vault)
+  name       = each.key
+  image      = "ubuntu:20.04"
+  ephemeral  = false
+  profiles   = ["default", lxd_profile.server_config.name]
+
+  device {
+    name = "volume1"
+    type = "disk"
+    properties = {
+      path   = "/var/lib/docker"
+      source = "${lxd_volume.vault[each.key].name}"
+      pool   = "${lxd_storage_pool.vault.name}"
+    }
+  }
 }

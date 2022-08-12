@@ -1,7 +1,10 @@
 ---
 
-- name: Setup terraform environment
+- name: Manage site configuration
   hosts: localhost
   gather_facts: no
 
-- import_playbook: cloudinit/cloudinit.yml
+- import_playbook: localhost/localhost.yml
+- import_playbook: gitlab/gitlab.yml
+- import_playbook: runner/runner.yml
+- import_playbook: vault/vault.yml

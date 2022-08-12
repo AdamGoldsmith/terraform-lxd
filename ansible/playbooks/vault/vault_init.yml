@@ -1,0 +1,15 @@
+---
+
+- name: Initialise Hashicorp Vault
+  hosts: vault
+  become: yes
+  gather_facts: yes
+  tags:
+    - vault
+    - vault_init
+
+  tasks:
+
+    - name: Run vault server initialisation role
+      include_role:
+        name: ansible-role-vault-init

@@ -1,0 +1,9 @@
+---
+
+vault_tls_disable: "false"
+vault_protocol: "{{ vault_tls_disable | bool | ternary('http', 'https') }}"
+vault_addr: "{{ ansible_fqdn }}"
+vault_port: 8200
+vault_service: "vault"
+vault_keysfile: "~/.hashicorp_vault_keys.json"
+key_threshold: 3

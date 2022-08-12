@@ -1,0 +1,16 @@
+---
+
+- name: Start Hashicorp Vault
+  hosts: vault
+  become: yes
+  tags:
+    - never
+    - vault_start
+
+  tasks:
+
+    - name: Start vault cloud instances
+      vars:
+        service_name: vault
+      include_role:
+        name: ansible-role-vault-start

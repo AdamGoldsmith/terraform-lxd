@@ -1,0 +1,52 @@
+---
+
+# # NOTE: Tried the following but there were problems
+# - name: Register GitLab runner
+#   community.general.gitlab_runner:
+#     api_url: "https://{{ gitlab_server_address }}:{{ gitlab_server_port }}/"
+#     api_token: "{{ access_token }}"
+#     registration_token: "{{ gitlab_runner_registration_token }}"
+#     # description: Docker runner
+#     description: "{{ inventory_hostname }}"
+#     state: present
+#     active: yes
+#     tag_list:
+#       - 'docker'
+#     run_untagged: no
+#     locked: no
+#     validate_certs: no
+
+- name: Get GitLab certificate
+  community.crypto.get_certificate:
+    host: "{{ gitlab_server_address }}"
+    port: "{{ gitlab_server_port }}"
+  run_once: yes
+  register: gitlab_cert
+
+- name: Ensure certificates directory exists
+  file:
+    path: "{{ gitlab_runner_certs_dir }}"
+    state: directory
+    mode: "0740"
+
+- name: Copy cert to file
+  copy:
+    content: "{{ gitlab_cert['cert'] }}"
+    dest: "{{ gitlab_runner_certs_dir }}/gitlab.crt"
+    mode: "0640"
+
+# NOTE: This step is not idempotent and will keep adding runners if run multiple times
+- name: Register runner with GitLab
+  command:
+    cmd: "gitlab-runner register
+      --url https://{{ gitlab_server_address }}:{{ gitlab_server_port }}
+      --registration-token {{ gitlab_runner_registration_token }}
+      --tls-ca-file {{ gitlab_runner_certs_dir }}/gitlab.crt
+      {{ (gitlab_tag_list | length) | ternary('--tag-list ' + (gitlab_tag_list | join(',')), '--run-untagged=true') }}
+      --executor docker
+      --description 'Docker runner ({{ runner_docker_image }})'
+      --docker-image {{ runner_docker_image }}
+      --docker-privileged
+      --docker-volumes /certs/client
+      --non-interactive"
+  register: register_output

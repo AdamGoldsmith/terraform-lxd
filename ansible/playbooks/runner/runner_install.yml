@@ -1,0 +1,63 @@
+---
+
+- name: GitLab Runner installation
+  hosts: runner
+  become: yes
+  gather_facts: yes
+  tags:
+    - install
+    - runner
+    - runner_install
+
+  pre_tasks:
+
+    - name: Clone external roles
+      tags:
+        - clone
+      git:
+        repo: "{{ repo_item['source'] }}"
+        dest: "{{ inventory_dir | default(ansible_inventory_sources[0]) }}\
+          /../roles/{{ repo_item['name'] }}"
+        clone: yes
+        version: "{{ repo_item['version'] | default(omit) }}"
+        force: yes
+      register: git_clone
+      loop: "{{ external_roles }}"
+      loop_control:
+        loop_var: repo_item
+      delegate_to: localhost
+      run_once: yes
+      become: no
+      when: repo_item['name'] == 'ansible-role-docker'
+
+    - name: Update apt cache
+      apt:
+        update_cache: yes
+      when: ansible_os_family == 'Debian'
+
+  tasks:
+
+    - name: Run docker installation role
+      include_role:
+        name: ansible-role-docker
+
+    # TODO: Until TLS is properly configured
+    - name: Populate docker daemon properties file
+      tags:
+        - daemon
+      copy:
+        content: "{{ docker_daemon_properties | to_nice_json }}"
+        dest: /etc/docker/daemon.json
+        mode: "0644"
+      notify: Restart docker
+      when: docker_daemon_properties | length
+
+    - name: Run gitlab runner installation role
+      include_role:
+        name: ansible-role-runner-install
+
+  handlers:
+    - name: Restart docker
+      ansible.builtin.service:
+        name: docker
+        state: restarted

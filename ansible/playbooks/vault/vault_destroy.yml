@@ -1,0 +1,19 @@
+---
+
+- name: Destroy Hashicorp Vault installation
+  hosts: localhost
+  connection: local
+  gather_facts: no
+  tags:
+    - never
+    - destroy
+    - vault_destroy
+
+  tasks:
+
+    - name: Destroy vault cloud instances
+      vars:
+        service_name: vault
+        resource_action: destroy
+      include_role:
+        name: ansible-role-cloud-resources

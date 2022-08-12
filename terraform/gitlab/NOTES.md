@@ -1,6 +1,6 @@
 # Notes
 
-When creating the container for gitlab there are some special requirements. In the lxd_container resoource creation section of the file `terraform/gitlab/gitlab.tf`, notice the following options:
+When creating the container for gitlab there are some special requirements. In the lxd_container resource creation section of the file `terraform/gitlab/gitlab.tf`, notice the following options:
 
 ```
   config = {
