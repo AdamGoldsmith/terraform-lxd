@@ -28,7 +28,9 @@ TODO: Tidy up
 1. `cd ../../ansible`
 1. Test ansible connectivity: `ansible lxd -m ping`
 1. Connect directly: `ssh -i ssh_keys/id_ansible ansible@x.x.x.x` (grab IP from `lxc list` output)
-1. `ansible-playbook playbooks/site.yml`
+1. `ansible-playbook playbooks/site.yml --skip-tags runner_register`
+1. Navigate to GitLab "runners" page (under "admin") and copy the runner registration token
+1. `ansible-playbook playbooks/site.yml --tags runner_register -e "runner_registration_token=vMZms9z6uKBKcxxKTDAC"`
 
 # Known issues
 
