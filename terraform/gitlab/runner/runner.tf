@@ -47,6 +47,12 @@ resource "lxd_container" "gitlab_runners" {
   ephemeral  = false
   profiles   = ["default", lxd_profile.runner_config.name]
 
+  config = {
+    "security.nesting"                     = 1
+    "security.syscalls.intercept.mknod"    = 1
+    "security.syscalls.intercept.setxattr" = 1
+  }
+
   device {
     name = "volume1"
     type = "disk"
