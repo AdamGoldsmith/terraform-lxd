@@ -49,3 +49,6 @@ TODO: Tidy up
 
 This blog helped me select the correct LXD configuration & LXC container settings:
 https://blog.canutethegreat.com/portable-devops-platform-gitlab-in-an-lxd-container-db2850224caf
+
+This may be useful for running packer on LXC images in a pipeline using a docker-based runner
+https://github.com/micw/docker-lxc-demo/blob/master/Dockerfile
