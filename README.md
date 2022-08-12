@@ -16,9 +16,6 @@ TODO: Tidy up
 1. Clone repo
 1. `cd ansible`
 1. `ansible-playbook playbooks/localhost/localhost.yml`
-1. `cd ../terraform/gitlab`
-1. `terraform init`
-1. `terraform apply --auto-approve`
 1. `cd ../terraform/gitlab/server`
 1. `terraform init`
 1. `terraform apply --auto-approve`
