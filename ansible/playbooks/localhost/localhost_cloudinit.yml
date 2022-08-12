@@ -3,6 +3,9 @@
 - name: Prepare CloudInit configuration
   hosts: localhost
   gather_facts: no
+  tags:
+    - localhost
+    - localhost_cloudinit
 
   tasks:
 

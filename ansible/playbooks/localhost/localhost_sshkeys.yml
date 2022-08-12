@@ -3,6 +3,9 @@
 - name: Prepare SSH keys
   hosts: localhost
   gather_facts: no
+  tags:
+    - localhost
+    - localhost_sshkeys
 
   tasks:
 

@@ -6,7 +6,7 @@
   become: yes
   tags:
     - never
-    - install
+    - localhost_install
 
   tasks:
 
