@@ -13,5 +13,6 @@
 - import_playbook: vault_unseal.yml
 - import_playbook: vault_configure.yml
 - import_playbook: vault_approle.yml
+- import_playbook: vault_jwt.yml
 - import_playbook: vault_sshkeysign.yml
 - import_playbook: vault_destroy.yml

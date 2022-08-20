@@ -1,0 +1,16 @@
+---
+
+- name: Enable HashiCorp Vault JWT (JSON Web Token)
+  hosts: vault
+  become: no
+  gather_facts: yes
+  run_once: yes
+  tags:
+    - vault
+    - vault_jwt
+
+  tasks:
+
+    - name: Run vault server jwt role
+      include_role:
+        name: ansible-role-vault-jwt
