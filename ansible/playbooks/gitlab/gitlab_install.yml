@@ -2,8 +2,8 @@
 
 - name: GitLab installation
   hosts: gitlab
-  become: yes
   gather_facts: yes
+  become: yes
   tags:
     - install
     - gitlab
