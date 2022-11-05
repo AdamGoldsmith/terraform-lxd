@@ -22,7 +22,7 @@ vault_protocol: "{{ vault_tls_disable | bool | ternary('http', 'https') }}"     
 vault_addr: "{{ ansible_fqdn }}"                                                # Vault listener address
 vault_port: 8200                                                                # Vault listener port
 vault_keysfile: "~/.hashicorp_vault_keys.json"                                  # Local file storing master key shards
-vault_admintokenfile: "~/.hashicorp_admin_token.json"
+vault_admintokenfile: "~/.hashicorp_admin_token.json"                           # Local file storing admin token
 vault_sshkeysignertokenfile: "~/.hashicorp_sshkeysigner_token.json"             # Local file storing sshkeysigner token
 ssh_client: "ssh-client-signer"                                                 # SSH client signining secret engine name
 sshrole_name: "sshrole"                                                         # SSH client signing role name
