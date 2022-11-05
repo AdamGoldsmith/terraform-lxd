@@ -1,13 +1,18 @@
-# ansible-role-vault-sshkeysign
+# ansible-role-vault-jwt
 
-Configure Hashicorp's Vault SSH public key signing for client and host by
-* Enabling SSH secrets engine
-* Configuring Vault with a self-generated CA
-* Creating SSH role
+Configure Hashicorp's Vault JWT authentication method by
+* Enabling JWT authentication method
+* Configuring JWT authentication method
+* Configuring GitLab access policy
+* Configuring GitLab role
 
 Currently tested on these Operating Systems
 * Oracle Linux/RHEL/CentOS
 * Debian/Stretch64
+
+## References
+
+Role creation was based on this [GitLab documentation](https://docs.gitlab.com/ee/ci/secrets/) for using external secrets in CI
 
 ## Requirements
 
@@ -22,17 +27,8 @@ vault_protocol: "{{ vault_tls_disable | bool | ternary('http', 'https') }}"     
 vault_addr: "{{ ansible_fqdn }}"                                                # Vault listener address
 vault_port: 8200                                                                # Vault listener port
 vault_keysfile: "~/.hashicorp_vault_keys.json"                                  # Local file storing master key shards
-vault_admintokenfile: "~/.hashicorp_admin_token.json"
-vault_sshkeysignertokenfile: "~/.hashicorp_sshkeysigner_token.json"             # Local file storing sshkeysigner token
-ssh_client: "ssh-client-signer"                                                 # SSH client signining secret engine name
-sshrole_name: "sshrole"                                                         # SSH client signing role name
-default_user: "ansible"                                                         # SSH client signing default user
-def_lease_ttl: "10m"                                                            # Default lease time to live
-max_lease_ttl: "20m"                                                            # Max lease time to live
-ssh_host: "ssh-host-signer"                                                     # SSH host signining secret engine name
-host_max_lease_ttl: "87600h"                                                    # SSH host signing max TTL
-hostrole_name: "hostrole"                                                       # SSH host signing role name
-allowed_domains: "localdomain,example.com"                                      # Permitted domains
+vault_admintokenfile: "~/.hashicorp_admin_token.json"                           # Local file storing admin token
+jwks_domain: "gitlab.example.com"                                               # Name of GitLab domain
 ```
 
 ## Dependencies
@@ -44,12 +40,20 @@ None
 ```yaml
 ---
 
-- name: Create SSH Key Signing in Hashicorp Vault
+- name: Enable HashiCorp Vault JWT (JSON Web Token)
   hosts: vault
+  become: no
   gather_facts: yes
+  run_once: yes
+  tags:
+    - vault
+    - vault_jwt
 
-  roles:
-    - ansible-role-vault-sshkeysign
+  tasks:
+
+    - name: Run vault server jwt role
+      include_role:
+        name: ansible-role-vault-jwt
 ```
 
 ## License

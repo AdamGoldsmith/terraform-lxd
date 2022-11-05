@@ -1,0 +1,13 @@
+{
+  "role_type": "jwt",
+  "policies": ["gitlab"],
+  "token_explicit_max_ttl": 60,
+  "user_claim": "user_email",
+  "bound_claims_type": "glob",
+  "bound_claims": {
+    "project_id": "3",
+    "ref_protected": "true",
+    "ref_type": "tag",
+    "ref": "auto-deploy-*"
+  }
+}
