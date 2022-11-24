@@ -83,6 +83,7 @@ TODO: Tidy up
 
 1. Add ssh server terraform deployment method and docs
 1. Remove roles from repo and clone them when needed instead
+1. Ansiblise the CA, key, crt & csr creation steps for traefik mTLS (see [these notes](ansible/playbooks/traefik/config_notes.md) for details)
 1. Fix GitLab mail
 1. Add GitLab backup/restore functionality/roles
 1. Consider making runner registration idempotent - currently keeps registering runners
