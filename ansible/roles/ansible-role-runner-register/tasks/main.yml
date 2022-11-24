@@ -1,6 +1,10 @@
 ---
 
 # # NOTE: Tried the following but there were problems
+# # NOTE: Also, requires a PAT to register the runner so a further manual step required
+# #   https://docs.gitlab.com/ee/user/profile/personal_access_tokens.html#create-a-personal-access-token-programmatically
+# #   https://stackoverflow.com/questions/69003287/creating-parameterized-gitlab-personal-access-token-from-cli
+# #   So many involved steps justifies using the below method of registering via the CLI
 # - name: Register GitLab runner
 #   community.general.gitlab_runner:
 #     api_url: "https://{{ gitlab_server_address }}:{{ gitlab_server_port }}/"
@@ -22,6 +26,7 @@
     port: "{{ gitlab_server_port }}"
   run_once: yes
   register: gitlab_cert
+  check_mode: no
 
 - name: Ensure certificates directory exists
   file:

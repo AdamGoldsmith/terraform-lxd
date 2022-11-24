@@ -10,10 +10,34 @@
 
   tasks:
 
+    - name: Get runner registration token block
+      block:
+
+        - name: Get gitlab runner registration token
+          ansible.builtin.command:
+            cmd: 'gitlab-rails runner -e production "puts Gitlab::CurrentSettings.current_application_settings.runners_registration_token"'
+          delegate_to: "{{ groups['gitlab'][0] }}"
+          run_once: yes
+          changed_when: no
+          register: runner_reg_cmd
+
+        - name: Set gitlab runner registration token fact
+          ansible.builtin.set_fact:
+            runner_registration_token: "{{ runner_reg_cmd['stdout'] }}"
+
+      become: yes
+      when: not runner_registration_token | default('') | length
+
+    - name: Show runner registration token
+      ansible.builtin.debug:
+        msg: "runner_registration_token: {{ runner_registration_token | default('') }}"
+        verbosity: "{{ verbosity_level | default(1) }}"
+      run_once: yes
+
     - name: Run gitlab runner registration role
       vars:
         gitlab_server_address: "{{ gitlab_domain }}"
         gitlab_server_port: "{{ gitlab_port }}"
         gitlab_runner_registration_token: "{{ runner_registration_token }}"
-      include_role:
+      ansible.builtin.include_role:
         name: ansible-role-runner-register
