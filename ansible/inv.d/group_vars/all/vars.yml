@@ -1,2 +1,3 @@
 ---
 ansible_user: ansible
+verbosity_level: 1
