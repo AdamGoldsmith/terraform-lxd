@@ -83,6 +83,7 @@ TODO: Tidy up
 
 1. Add ssh server terraform deployment method and docs
 1. Remove roles from repo and clone them when needed instead
+1. When using gitlab container registry -> set up 5050 rule from LXD host to traefik (initially I went direct to gitlab instance), then update `volume` config for runners
 1. Ansiblise the CA, key, crt & csr creation steps for traefik mTLS (see [these notes](ansible/playbooks/traefik/config_notes.md) for details)
 1. Fix GitLab mail
 1. Add GitLab backup/restore functionality/roles
@@ -139,6 +140,61 @@ Here, I attempt to show the current status of the project in bullet points:
   * Only playing with these at the moment
   * Load balanced behind traefik instance
   * Testing TLS/mTLS configurations
+
+# Renewing SSL certificates
+
+1. Login to gitlab server
+    ```bash
+    gitlab-ctl renew-le-certs
+    ```
+1. Put new certs on gitlab runners, from code repo (update gitlab_server_address accordingly)
+   ```bash
+   ansible-playbook playbooks/runner/runner.yml -e "gitlab_server_address=gitlab.example.com" --tags runner_certs
+   ```
+
+# GitLab Pipeline Notes
+
+`gitlab-ci.yml`
+```
+# This pipeline will build from Dockerfile, test the newly-built image, then, if successful, push
+# the image to GitLab Container Registry with a specified tag (defaults to latest if not specified)
+variables:
+  TAG_VERSION:
+    value: "latest"
+    description: "Version to tag image after successful testing"
+  TAG_LATEST: ${CI_REGISTRY_IMAGE}/${CI_COMMIT_REF_NAME}/my-nginx:${TAG_VERSION}
+  TAG_COMMIT: ${CI_REGISTRY_IMAGE}/${CI_COMMIT_REF_NAME}/my-nginx:${CI_COMMIT_SHORT_SHA}
+
+stages:
+  - build
+  - test
+  - push
+
+docker_build:
+  stage: build
+  script:
+    - echo -n ${CI_REGISTRY_PASSWORD} | docker login -u ${CI_REGISTRY_USER} --password-stdin ${CI_REGISTRY}
+    - docker build -t ${TAG_COMMIT} ./docker
+    - docker push ${TAG_COMMIT}
+
+docker_test:
+  stage: test
+  image: ${TAG_COMMIT}
+  services:
+    - name: ${TAG_COMMIT}
+      alias: my-nginx
+  script:
+    - curl http://my-nginx:80
+
+docker_push:
+  stage: push
+  script:
+    - echo -n ${CI_REGISTRY_PASSWORD} | docker login -u ${CI_REGISTRY_USER} --password-stdin ${CI_REGISTRY}
+    - docker pull ${TAG_COMMIT}
+    - echo "Tagging ${TAG_COMMIT} with \"${TAG_VERSION}\""
+    - docker tag ${TAG_COMMIT} ${TAG_LATEST}
+    - docker push ${TAG_LATEST}
+```
 
 # References
 
