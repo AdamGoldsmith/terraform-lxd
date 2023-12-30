@@ -8,6 +8,7 @@
 - import_playbook: vault_remove.yml
 - import_playbook: vault_stop.yml
 - import_playbook: vault_install.yml
+- import_playbook: vault_upgrade.yml
 - import_playbook: vault_start.yml
 - import_playbook: vault_init.yml
 - import_playbook: vault_unseal.yml

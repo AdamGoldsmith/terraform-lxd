@@ -1,0 +1,14 @@
+---
+
+- name: Upgrade Hashicorp Vault
+  hosts: vault
+  become: yes
+  gather_facts: yes
+  tags:
+    - vault_upgrade
+
+  tasks:
+
+    - name: Run vault server upgrade role
+      include_role:
+        name: ansible-role-vault-upgrade

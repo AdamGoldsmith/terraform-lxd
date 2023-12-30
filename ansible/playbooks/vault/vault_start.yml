@@ -6,6 +6,7 @@
   tags:
     - never
     - vault_start
+    - vault_upgrade
 
   tasks:
 
