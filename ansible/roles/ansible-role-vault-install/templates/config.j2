@@ -14,7 +14,7 @@ listener "tcp" {
 storage "raft" {
   path    = "{{ vault_data_path }}/"
   node_id = "{{ hostvars[inventory_hostname]['ansible_hostname'] }}"
-{% for peer in ansible_play_hosts_all | reject('equalto', inventory_hostname) | list %}
+{% for peer in ansible_play_hosts_all | reject('equalto', inventory_hostname) | list | sort %}
   retry_join {
     leader_api_addr         = "{{ vault_protocol }}://{{ hostvars[peer]['ansible_fqdn'] }}:{{ vault_port }}"
 {% if not vault_tls_disable | bool %}
